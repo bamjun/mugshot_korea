@@ -1,0 +1,30 @@
+
+{% extends 'layouts/blank.html' %}
+
+{% block content %}
+
+
+    <h1>{{ post.title }}</h1>
+    <div>{{ post.get_markdown|safe }}</div>
+    <a href="{% url 'post_update' post.id %}">Edit</a>
+    <a href="{% url 'post_delete' post.id %}" onclick="return confirm('Are you sure you want to delete this post?');">Delete</a>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>
+                <img src="{{ comment.author.profile.avatar }}" alt="{{ comment.author.profile.name }}" style="width:50px; height:50px; border-radius:50%;">
+                {{ comment.author.profile.name }} - {{ comment.content }} - {{ comment.created_at }}
+                <a href="{% url 'delete_comment' post.id comment.id %}" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+
+    <h3>Add a comment</h3>
+    <form method="post" action="{% url 'add_comment' post.id %}">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Add Comment</button>
+    </form>
+{% endblock %}

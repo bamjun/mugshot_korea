@@ -7,8 +7,8 @@ from .forms import PostForm, CommentForm
 from .models import Post, Image, Comment
 import json
 import re
+from django.core.paginator import Paginator
 
-@login_required
 def post_list(request):
     posts = Post.objects.all().order_by('-created_at')
     return render(request, 'a_board/post_list.html', {'posts': posts})
@@ -90,12 +90,16 @@ def post_delete(request, post_id):
     post.delete()
     return redirect('post_list')
 
-@login_required
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    comments = post.comments.all()
+    comments = post.comments.all().order_by('-created_at')
+
+    paginator = Paginator(comments, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     comment_form = CommentForm()
-    return render(request, 'a_board/post_detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form})
+    return render(request, 'a_board/post_detail.html', {'post': post, 'page_obj': page_obj, 'comment_form': comment_form})
 
 @login_required
 def add_comment(request, post_id):

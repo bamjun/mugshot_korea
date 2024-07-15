@@ -1,0 +1,86 @@
+{% extends 'layouts/blank.html' %}
+
+{% block content %}
+
+<div
+  class="text-center flex flex-col items-center block max-w-3xl mx-auto md:p-12 bg-white rounded-2xl md:drop-shadow-2xl shadow-black w-full p-8 mt-10"
+>
+  <h1>{{ post.title }}</h1>
+  <div>{{ post.get_markdown|safe }}</div>
+
+  <div class="w-full flex justify-end">
+    <a
+      class="button button-blue text-xs ml-1"
+      href="{% url 'post_update' post.id %}"
+      >Edit</a
+    >
+    <a
+      class="button button-red text-xs ml-1"
+      href="{% url 'post_delete' post.id %}"
+      onclick="return confirm('Are you sure you want to delete this post?');"
+      >Delete</a
+    >
+  </div>
+</div>
+
+<h2 class="text-left w-full max-w-3xl mx-auto mt-10">댓글 목록</h2>
+<ul>
+  {% for comment in page_obj %}
+  <li
+    class="text-center flex flex-col items-center block max-w-3xl mx-auto md:p-12 bg-green-50 rounded-2xl md:drop-shadow-2xl shadow-black w-full p-8 mt-10"
+  >
+    {{ comment.content }}
+    <div class="w-full flex">
+      <img
+        src="{{ comment.author.profile.avatar }}"
+        alt="{{ comment.author.profile.name }}"
+        style="width: 50px; height: 50px; border-radius: 50%"
+      />
+
+      <div class="w-full flex justify-end">
+        <a
+          class="button button-red text-xs"
+          href="{% url 'delete_comment' post.id comment.id %}"
+          onclick="return confirm('Are you sure you want to delete this comment?');"
+          >Delete</a
+        >
+      </div>
+    </div>
+    <div class="w-full flex justify-between text-sm text-gray-500">
+      <div>{{ comment.author.profile.name }}</div>
+      <div>{{ comment.created_at }}</div>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+
+<!-- 페이지네이션 네비게이션 -->
+<div class="max-w-3xl mx-auto mt-4">
+  <div class="flex justify-between">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="button text-blue-500">Previous</a>
+    {% else %}
+      <span class="text-gray-500">Previous</span>
+    {% endif %}
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="button text-blue-500">Next</a>
+    {% else %}
+      <span class="text-gray-500">Next</span>
+    {% endif %}
+  </div>
+</div>
+
+<div
+  class="text-center flex flex-col items-center block max-w-3xl mx-auto md:p-12 bg-white rounded-2xl md:drop-shadow-2xl shadow-black w-full p-8 mt-10"
+>
+  <div class="w-full flex">
+    <h2 class="my-4">댓글쓰기</h2>
+  </div>
+  <form class="w-full" method="post" action="{% url 'add_comment' post.id %}">
+    {% csrf_token %} {{ comment_form.as_p }}
+    <div class="w-full flex justify-end">
+      <button type="submit">확인</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -12,6 +12,7 @@ pillow = "^10.4.0"
 django-cleanup = "^8.1.0"
 django-allauth = "^0.63.6"
 django-htmx = "^1.18.0"
+markdown = "^3.6"
 
 
 [build-system]

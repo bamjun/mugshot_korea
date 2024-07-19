@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from a_users.views import profile_view
+from a_users.views import profile_view, service_about_view
 from a_home.views import *
 from a_board.views import post_list
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('@<username>/', profile_view, name='profile'),
     path('board/', include('a_board.urls')),
+    path('about/', service_about_view, name='service-about'),
 ]
 
 # Only used in development

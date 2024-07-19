@@ -89,3 +89,6 @@ def profile_delete_view(request):
         return redirect('home')
     
     return render(request, 'a_users/profile_delete.html')
+
+def service_about_view(request):
+    return render(request, 'a_users/service_about.html')

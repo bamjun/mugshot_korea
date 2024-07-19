@@ -1,14 +1,22 @@
 from pathlib import Path
+import os
+import configparser
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+config = configparser.ConfigParser()
+config.read(os.path.join(BASE_DIR, 'config.ini'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s0*hvb!_o8^!_o&u1oo(xh-(o8xf*dqse6$m)k4dr%yc3vcq4@'
+SECRET_KEY = config['django']['django_secret_key']
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
